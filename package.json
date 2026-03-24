@@ -1,0 +1,28 @@
+{
+  "name": "hospy-online",
+  "version": "0.1.0",
+  "description": "Multi-agent hospital system powered by Invariance SDK",
+  "type": "module",
+  "scripts": {
+    "intake": "tsx src/flows/01-patient-intake.ts",
+    "diagnosis": "tsx src/flows/02-diagnosis.ts",
+    "prescription": "tsx src/flows/03-prescription.ts",
+    "imaging": "tsx src/flows/04-imaging-request.ts",
+    "handoff": "tsx src/flows/05-nurse-handoff.ts",
+    "discharge": "tsx src/flows/06-discharge.ts",
+    "journey": "tsx src/flows/07-full-journey.ts",
+    "all": "tsx src/flows/01-patient-intake.ts && tsx src/flows/02-diagnosis.ts && tsx src/flows/03-prescription.ts && tsx src/flows/04-imaging-request.ts && tsx src/flows/05-nurse-handoff.ts && tsx src/flows/06-discharge.ts && tsx src/flows/07-full-journey.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@invariance/sdk": "link:../Invariance/invariance-sdk"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
