@@ -221,29 +221,31 @@ function evaluateMonitorMock(monitorId: string, monitor: Monitor): MonitorEvalua
   // to simulate the backend finding matching trace data.
   const nl = monitor.natural_language.toLowerCase();
   const isVitalsRule =
-    nl.includes('heart rate') || nl.includes('oxygen') || nl.includes('blood pressure') || nl.includes('temperature');
+    nl.includes('heart rate') || nl.includes('oxygen') || nl.includes('blood pressure') || nl.includes('systolic') || nl.includes('temperature');
 
   const matchCount = isVitalsRule ? 1 : 0;
   const matchedNodeIds: string[] = [];
 
   if (matchCount > 0) {
-    const nodeId = `node-${crypto.randomUUID().slice(0, 8)}`;
+    const nodeId = `node-${monitorId.slice(0, 8)}`;
     matchedNodeIds.push(nodeId);
 
-    // Create a synthetic signal for matched monitors
-    const signal: MonitorSignal = {
-      id: `evt-${crypto.randomUUID().slice(0, 8)}`,
-      monitor_id: monitorId,
-      monitor_name: monitor.name,
-      node_id: nodeId,
-      session_id: `sess-mock-${crypto.randomUUID().slice(0, 8)}`,
-      agent_id: monitor.agent_id ?? 'unknown',
-      severity: monitor.severity,
-      message: `Monitor "${monitor.name}" triggered: ${monitor.natural_language}`,
-      acknowledged: false,
-      created_at: new Date().toISOString(),
-    };
-    mockSignals.push(signal);
+    const existingSignal = mockSignals.find((signal) => signal.monitor_id === monitorId && signal.node_id === nodeId);
+    if (!existingSignal) {
+      const signal: MonitorSignal = {
+        id: `evt-${monitorId.slice(0, 8)}`,
+        monitor_id: monitorId,
+        monitor_name: monitor.name,
+        node_id: nodeId,
+        session_id: `sess-mock-${monitorId.slice(0, 8)}`,
+        agent_id: monitor.agent_id ?? 'unknown',
+        severity: monitor.severity,
+        message: `Monitor "${monitor.name}" triggered: ${monitor.natural_language}`,
+        acknowledged: false,
+        created_at: new Date().toISOString(),
+      };
+      mockSignals.push(signal);
+    }
   }
 
   return {

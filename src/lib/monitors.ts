@@ -97,11 +97,28 @@ export class HospitalMonitorManager {
    * Acknowledge all unacknowledged events.
    */
   async acknowledgeAllUnacknowledged(): Promise<number> {
-    const { events } = await this.inv.monitors.listEvents({ acknowledged: false });
-    for (const event of events) {
-      await this.inv.monitors.acknowledgeEvent(event.id);
+    let acknowledged = 0;
+    let afterId: string | undefined;
+
+    while (true) {
+      const { events, next_cursor } = await this.inv.monitors.listEvents({
+        acknowledged: false,
+        after_id: afterId,
+        limit: 100,
+      });
+
+      if (events.length === 0) break;
+
+      for (const event of events) {
+        await this.inv.monitors.acknowledgeEvent(event.id);
+        acknowledged++;
+      }
+
+      afterId = next_cursor ?? events[events.length - 1]?.id;
+      if (!afterId || events.length < 100) break;
     }
-    return events.length;
+
+    return acknowledged;
   }
 
   /**
@@ -159,13 +176,15 @@ export class MonitorPoller {
     if (this.polling) return; // prevent overlapping polls
     this.polling = true;
     try {
-      const { events } = await this.inv.monitors.listEvents({
+      const { events, next_cursor } = await this.inv.monitors.listEvents({
         after_id: this.lastSeenEventId,
         acknowledged: false,
       });
       for (const event of events) {
-        this.lastSeenEventId = event.id;
         await this.onEvent(event);
+      }
+      if (events.length > 0) {
+        this.lastSeenEventId = next_cursor ?? events[events.length - 1]?.id;
       }
     } catch (err) {
       if (this.onError) this.onError(err);
