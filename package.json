@@ -11,7 +11,8 @@
     "handoff": "tsx src/flows/05-nurse-handoff.ts",
     "discharge": "tsx src/flows/06-discharge.ts",
     "journey": "tsx src/flows/07-full-journey.ts",
-    "all": "tsx src/flows/01-patient-intake.ts && tsx src/flows/02-diagnosis.ts && tsx src/flows/03-prescription.ts && tsx src/flows/04-imaging-request.ts && tsx src/flows/05-nurse-handoff.ts && tsx src/flows/06-discharge.ts && tsx src/flows/07-full-journey.ts",
+    "monitors": "tsx src/flows/08-monitors.ts",
+    "all": "tsx src/flows/01-patient-intake.ts && tsx src/flows/02-diagnosis.ts && tsx src/flows/03-prescription.ts && tsx src/flows/04-imaging-request.ts && tsx src/flows/05-nurse-handoff.ts && tsx src/flows/06-discharge.ts && tsx src/flows/07-full-journey.ts && tsx src/flows/08-monitors.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
