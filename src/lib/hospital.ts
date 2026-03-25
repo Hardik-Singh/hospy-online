@@ -6,6 +6,7 @@ import { NurseAgent } from '../agents/nurse.js';
 import { PharmacyAgent } from '../agents/pharmacy.js';
 import { RadiologistAgent } from '../agents/radiologist.js';
 import { AdminAgent } from '../agents/admin.js';
+import { HospitalMonitorManager } from './monitors.js';
 
 export interface HospitalSystem {
   inv: Invariance;
@@ -16,6 +17,7 @@ export interface HospitalSystem {
   pharmacy: PharmacyAgent;
   radiologist: RadiologistAgent;
   admin: AdminAgent;
+  monitors: HospitalMonitorManager;
   shutdown: () => Promise<void>;
 }
 
@@ -54,6 +56,7 @@ export function createHospital(): HospitalSystem {
   const pharmacy = new PharmacyAgent(inv, pharmacyKeys);
   const radiologist = new RadiologistAgent(inv, radiologistKeys);
   const admin = new AdminAgent(inv, adminKeys);
+  const monitors = new HospitalMonitorManager(inv);
 
   return {
     inv,
@@ -64,6 +67,7 @@ export function createHospital(): HospitalSystem {
     pharmacy,
     radiologist,
     admin,
+    monitors,
     shutdown: () => inv.shutdown(),
   };
 }
